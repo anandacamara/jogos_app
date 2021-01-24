@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">JogosApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="senha">Password</string>
+    <string name="email">Email</string>
+    <string name="boxlogin">Remember</string>
+    <string name="create_account">Create account</string>
+    <string name="login_button">LOG IN</string>
+    <string name="name">Name</string>
+    <string name="senha_repetir">Repeate password</string>
+    <string name="cadastro_button">CREATE ACCOUNT</string>
 </resources>
