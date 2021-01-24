@@ -2,13 +2,17 @@ package com.example.jogosapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.jogosapp.databinding.ActivityLoginBinding
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import com.example.jogosapp.R
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var bind: ActivityLoginBinding
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bind = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(bind.root)
+        setContentView(R.layout.activity_login)
+
+        navController = findNavController(R.id.fragment_login_cadastro)
     }
 }
