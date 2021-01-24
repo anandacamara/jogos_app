@@ -1,5 +1,6 @@
 package com.example.jogosapp.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.jogosapp.databinding.ActivityDescricaoBinding
@@ -11,6 +12,10 @@ class DescricaoActivity : AppCompatActivity() {
         bind = ActivityDescricaoBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        bind.toolbarDescricaoActivity.setNavigationOnClickListener { onBackPressed() }
 
+        bind.buttonEditGame.setOnClickListener{
+            startActivity(Intent(this, CadastroGameActivity::class.java))
+        }
     }
 }
