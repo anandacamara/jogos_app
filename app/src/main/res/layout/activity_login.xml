@@ -4,13 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.SplashScreen">
-
+    tools:context=".ui.LoginActivity">
 
     <ImageView
-        android:scaleType="fitXY"
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/splash_firebase" />
+        app:srcCompat="@drawable/splash_firebase" />
+
+
+    <fragment
+        android:id="@+id/fragment_login_cadastro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="180dp"/>
 
 </FrameLayout>

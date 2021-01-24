@@ -1,4 +1,4 @@
-package com.example.jogosapp
+package com.example.jogosapp.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
