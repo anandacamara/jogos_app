@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.example.jogosapp.R
+import com.example.jogosapp.databinding.ActivitySplashBinding
 
 class SplashScreen : AppCompatActivity() {
+    private lateinit var bind: ActivitySplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        bind = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(bind.root)
 
         Handler(Looper.getMainLooper()).postDelayed({
             callLoginAcivity()
