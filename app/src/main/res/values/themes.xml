@@ -19,6 +19,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="ToolbarColoredBackArrow" parent="Apptheme">
+        <item name="android:textColorSecondary">#FFFFFF</item>
+    </style>
+
+    <style name="Apptheme">AppTheme</style>
+
     <style name="Theme.JogosApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.JogosApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
