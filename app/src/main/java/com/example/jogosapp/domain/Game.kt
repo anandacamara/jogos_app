@@ -1,3 +1,5 @@
 package com.example.jogosapp.domain
 
-data class Game(val name: String, val year: String, val description: String)
+import android.widget.ImageView
+
+data class Game(val name: String, val year: String, val description: String, val urlImage: String)

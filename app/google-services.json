@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "588705471208",
+    "project_id": "jogosapp-3a583",
+    "storage_bucket": "jogosapp-3a583.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588705471208:android:9397d0cb4bb853a43d075d",
+        "android_client_info": {
+          "package_name": "com.example.jogosapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "588705471208-p2qegc19ku34dfvfjsl5atqpdldegr24.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf7600zkDR9BPKDTn87spkJXF3hYG0s7k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588705471208-p2qegc19ku34dfvfjsl5atqpdldegr24.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
