@@ -1,19 +1,24 @@
 package com.example.jogosapp.ui
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import com.example.jogosapp.R
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.jogosapp.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
+    private lateinit var bind: ActivityHomeBinding
+    lateinit var gridLayoutManager: GridLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        setSupportActionBar(findViewById(R.id.toolbar))
+        bind = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(bind.root)
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
+        gridLayoutManager = GridLayoutManager(this, 2)
+        bind.recyclerViewHome.layoutManager = gridLayoutManager
+
+        bind.floatingButtonGame.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
