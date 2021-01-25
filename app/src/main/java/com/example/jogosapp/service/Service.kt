@@ -8,36 +8,37 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
+import java.io.File
 
 class ServiceFirebaseStorage(private val firebaseStorage: FirebaseStorage) {
+    var urlImage = ""
 
-    fun uploadPhotoGame(uriFile: Uri, fileName: String) {
-        val ref = firebaseStorage.getReference(fileName)
-        val task = ref.putFile(uriFile)
-        val urlTask = task.continueWithTask { task ->
+    fun uploadPhotoGame(uriFile: Uri?, fileName: String?) {
+
+        var file = Uri.fromFile(File(uriFile?.path))
+        val ref = firebaseStorage.reference.child(file.lastPathSegment!!)
+        val taskUpdate = ref.putFile(uriFile!!)
+        taskUpdate.continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
                     throw it
                 }
             }
-            task
             ref.downloadUrl
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val downloadUri = task.result
+                urlImage = task.result.toString()
             } else {
-                // Handle failures
-                // ...
+                throw Exception()
             }
-
         }
 
-        task.addOnProgressListener { (bytesTransferred, totalByteCount) ->
-            val progress = (100.0 * bytesTransferred) / totalByteCount
-
-        }.addOnPausedListener {
-
-        }
+//        task.addOnProgressListener { (bytesTransferred, totalByteCount) ->
+//            val progress = (100.0 * bytesTransferred) / totalByteCount
+//
+//        }.addOnPausedListener {
+//
+//        }
     }
 
 //    private fun generateUrlDownload(
@@ -68,11 +69,11 @@ class ServiceFirebaseStorage(private val firebaseStorage: FirebaseStorage) {
 
 class ServiceFirebaseDatabase(private val reference: DatabaseReference) {
 
-    private fun addGameInDatabase(id: String, game: Game) {
+    fun addGameInDatabase(id: String, game: Game) {
         reference.child("games").child(id).setValue(game)
     }
 
-    private fun updateGameInDatabase(id: String, game: Game) {
+    fun updateGameInDatabase(id: String, game: Game) {
         reference.child("games").child(id).child("name").setValue(game.name)
         reference.child("games").child(id).child("urlImage").setValue(game.urlImage)
         reference.child("games").child(id).child("description").setValue(game.description)
