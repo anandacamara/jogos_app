@@ -38,13 +38,19 @@ class CadastroGameActivity : AppCompatActivity() {
 
         bind.buttonAddImage.setOnClickListener {
             dispatchTakePictureIntent()
+            Log.i("------------------", serviceStorage.urlImage)
         }
 
         bind.buttonSaveGame.setOnClickListener {
             val url = serviceStorage.urlImage
             if (url.isNotEmpty()){
                 Log.i("TAG", getGame(url).toString())
-                serviceDataBase.addGameInDatabase("1", getGame(url))
+                val game = getGame(url)
+                serviceDataBase.addGameInDatabase("1", game)
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("game", game)
+                startActivity(intent)
+                onDestroy()
             }
         }
     }
@@ -68,12 +74,8 @@ class CadastroGameActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 val imagemSelecionada: Uri? = data?.data
-                //val filePathColumn = {MediaStore.Images.Media.DATA}
-                val url = "image${imagemSelecionada?.path
-                        ?.substring(imagemSelecionada.path!!.lastIndexOf("/"))}.jpeg"
-                Log.i("------------------",
-                url!!)
-                serviceStorage.uploadPhotoGame(imagemSelecionada, url)
+                serviceStorage.uploadPhotoGame(imagemSelecionada)
+                Log.i("------------------", serviceStorage.urlImage)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

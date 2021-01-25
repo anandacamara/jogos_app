@@ -13,7 +13,7 @@ import java.io.File
 class ServiceFirebaseStorage(private val firebaseStorage: FirebaseStorage) {
     var urlImage = ""
 
-    fun uploadPhotoGame(uriFile: Uri?, fileName: String?) {
+    fun uploadPhotoGame(uriFile: Uri?) {
 
         var file = Uri.fromFile(File(uriFile?.path))
         val ref = firebaseStorage.reference.child(file.lastPathSegment!!)

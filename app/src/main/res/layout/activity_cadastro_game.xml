@@ -88,6 +88,15 @@
             app:cardCornerRadius="360dp">
 
             <ImageView
+                android:id="@+id/iv_img_camera"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:src="@drawable/ic_camera" />
+
+            <ImageView
+                android:id="@+id/iv_ic_camera"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
