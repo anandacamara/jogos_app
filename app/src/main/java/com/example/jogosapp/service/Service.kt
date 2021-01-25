@@ -1,13 +1,13 @@
 package com.example.jogosapp.service
 
 import android.net.Uri
+import android.util.Log
 import com.example.jogosapp.domain.Game
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.StorageTask
-import com.google.firebase.storage.UploadTask
 import java.io.File
 
 class ServiceFirebaseStorage(private val firebaseStorage: FirebaseStorage) {
@@ -32,45 +32,13 @@ class ServiceFirebaseStorage(private val firebaseStorage: FirebaseStorage) {
                 throw Exception()
             }
         }
-
-//        task.addOnProgressListener { (bytesTransferred, totalByteCount) ->
-//            val progress = (100.0 * bytesTransferred) / totalByteCount
-//
-//        }.addOnPausedListener {
-//
-//        }
     }
-
-//    private fun generateUrlDownload(
-//        reference: StorageReference,
-//        task: StorageTask<UploadTask.TaskSnapshot>,
-//        success: (uri: Uri) -> Unit,
-//        error: (Exception?) -> Unit
-//    ) {
-//        task.continueWithTask { taskExecuted ->
-//            if(taskExecuted.isSuccessful) {
-//                reference.downloadUrl
-//            } else {
-//                taskExecuted.exception?.let {
-//                    throw it
-//                }
-//            }
-//        }.addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                task.result?.let(success) ?: run {
-//                    error(Throwable("Unknown Error"))
-//                }
-//            } else {
-//                error(Throwable("Unknown Error!"))
-//            }
-//        }.addOnFailureListener(error)
-//    }
 }
 
 class ServiceFirebaseDatabase(private val reference: DatabaseReference) {
 
-    fun addGameInDatabase(id: String, game: Game) {
-        reference.child("games").child(id).setValue(game)
+    fun addGameInDatabase(name: String, game: Game) {
+        reference.child(name).setValue(game)
     }
 
     fun updateGameInDatabase(id: String, game: Game) {
@@ -78,5 +46,26 @@ class ServiceFirebaseDatabase(private val reference: DatabaseReference) {
         reference.child("games").child(id).child("urlImage").setValue(game.urlImage)
         reference.child("games").child(id).child("description").setValue(game.description)
         reference.child("games").child(id).child("year").setValue(game.year)
+    }
+
+    fun getAllGames(): List<Game>{
+        val list = ArrayList<Game>()
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                        val result = it.value as HashMap<String,String>
+                        val gameFirebase = Game(result["name"]!!, result["year"]!!,
+                        result["description"]!!, result["urlImage"]!!)
+                        list.add(gameFirebase)
+                        Log.i("--------------", gameFirebase.toString())
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Erro", error.toString()
+                )
+            }
+        })
+        return list
     }
 }

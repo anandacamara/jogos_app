@@ -1,5 +1,6 @@
 package com.example.jogosapp.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -17,7 +18,7 @@ import com.google.firebase.storage.FirebaseStorage
 
 
 class CadastroGameActivity : AppCompatActivity() {
-    lateinit var bind: ActivityCadastroGameBinding
+    private lateinit var bind: ActivityCadastroGameBinding
     private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var reference: DatabaseReference
     private lateinit var firebaseStorage: FirebaseStorage
@@ -36,9 +37,11 @@ class CadastroGameActivity : AppCompatActivity() {
         serviceDataBase = ServiceFirebaseDatabase(reference)
         serviceStorage = ServiceFirebaseStorage(firebaseStorage)
 
+        val list = serviceDataBase.getAllGames()
+        Log.i("TAG", list.toString())
+
         bind.buttonAddImage.setOnClickListener {
             dispatchTakePictureIntent()
-            Log.i("------------------", serviceStorage.urlImage)
         }
 
         bind.buttonSaveGame.setOnClickListener {
@@ -46,25 +49,25 @@ class CadastroGameActivity : AppCompatActivity() {
             if (url.isNotEmpty()){
                 Log.i("TAG", getGame(url).toString())
                 val game = getGame(url)
-                serviceDataBase.addGameInDatabase("1", game)
+                serviceDataBase.addGameInDatabase(game.name, game)
                 val intent = Intent(this, HomeActivity::class.java)
                 intent.putExtra("game", game)
                 startActivity(intent)
-                onDestroy()
             }
         }
     }
 
-    fun getGame(url: String): Game {
+    private fun getGame(url: String): Game {
         return Game(bind.etNomeGame.text.toString(), bind.etYearGame.text.toString(),
             bind.etDescriptionGame.text.toString(), url)
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private fun dispatchTakePictureIntent() {
         Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.INTERNAL_CONTENT_URI).also { takePictureIntent ->
             takePictureIntent.resolveActivity(packageManager)?.also {
-                takePictureIntent.type = "image/*";
+                takePictureIntent.type = "image/*"
                 startActivityForResult(Intent.createChooser(takePictureIntent, "Selecione uma imagem"), 1)
             }
         }
@@ -80,5 +83,4 @@ class CadastroGameActivity : AppCompatActivity() {
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-
 }
