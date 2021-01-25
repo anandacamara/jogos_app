@@ -57,13 +57,11 @@ class ServiceFirebaseDatabase(private val reference: DatabaseReference) {
                         val gameFirebase = Game(result["name"]!!, result["year"]!!,
                         result["description"]!!, result["urlImage"]!!)
                         list.add(gameFirebase)
-                        Log.i("--------------", gameFirebase.toString())
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("Erro", error.toString()
-                )
+                Log.e("Erro", error.toString())
             }
         })
         return list

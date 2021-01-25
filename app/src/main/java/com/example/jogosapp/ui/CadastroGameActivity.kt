@@ -7,7 +7,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.jogosapp.databinding.ActivityCadastroGameBinding
 import com.example.jogosapp.domain.Game
 import com.example.jogosapp.service.ServiceFirebaseDatabase
@@ -37,16 +39,13 @@ class CadastroGameActivity : AppCompatActivity() {
         serviceDataBase = ServiceFirebaseDatabase(reference)
         serviceStorage = ServiceFirebaseStorage(firebaseStorage)
 
-        val list = serviceDataBase.getAllGames()
-        Log.i("TAG", list.toString())
-
         bind.buttonAddImage.setOnClickListener {
             dispatchTakePictureIntent()
         }
 
         bind.buttonSaveGame.setOnClickListener {
             val url = serviceStorage.urlImage
-            if (url.isNotEmpty()){
+            if (url.isNotEmpty()) {
                 Log.i("TAG", getGame(url).toString())
                 val game = getGame(url)
                 serviceDataBase.addGameInDatabase(game.name, game)
@@ -58,17 +57,22 @@ class CadastroGameActivity : AppCompatActivity() {
     }
 
     private fun getGame(url: String): Game {
-        return Game(bind.etNomeGame.text.toString(), bind.etYearGame.text.toString(),
-            bind.etDescriptionGame.text.toString(), url)
+        return Game(
+            bind.etNomeGame.text.toString(), bind.etYearGame.text.toString(),
+            bind.etDescriptionGame.text.toString(), url
+        )
     }
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun dispatchTakePictureIntent() {
-        Intent(Intent.ACTION_PICK,
-            MediaStore.Images.Media.INTERNAL_CONTENT_URI).also { takePictureIntent ->
+        Intent(
+            Intent.ACTION_PICK,
+            MediaStore.Images.Media.INTERNAL_CONTENT_URI
+        ).also { takePictureIntent ->
             takePictureIntent.resolveActivity(packageManager)?.also {
                 takePictureIntent.type = "image/*"
-                startActivityForResult(Intent.createChooser(takePictureIntent, "Selecione uma imagem"), 1)
+                startActivityForResult(Intent.createChooser(takePictureIntent,
+                        "Selecione uma imagem"), 1)
             }
         }
     }
@@ -78,9 +82,31 @@ class CadastroGameActivity : AppCompatActivity() {
             if (requestCode == 1) {
                 val imagemSelecionada: Uri? = data?.data
                 serviceStorage.uploadPhotoGame(imagemSelecionada)
-                Log.i("------------------", serviceStorage.urlImage)
+                addImageInButton(imagemSelecionada)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+    fun addImageInButton(uri: Uri?) {
+        Glide.with(this)
+            .load(uri)
+            .into(bind.ivImgCamera)
+
+        bind.ivImgCamera.visibility = ImageView.VISIBLE
+        bind.ivIcCamera.visibility = ImageView.GONE
+    }
+
+//    run {
+//        MaterialAlertDialogBuilder(this)
+//            .setBackgroundInsetStart(70)
+//            .setBackgroundInsetEnd(70)
+//            .setBackgroundInsetTop(10)
+//            .setBackgroundInsetBottom(100)
+//            .setBackground(
+//                ContextCompat.getColor(this, android.R.color.transparent).toDrawable()
+//            )
+//            .setView(view)
+//            .show()
+//    }
 }
