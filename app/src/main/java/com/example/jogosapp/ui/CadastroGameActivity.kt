@@ -49,9 +49,9 @@ class CadastroGameActivity : AppCompatActivity() {
                 Log.i("TAG", getGame(url).toString())
                 val game = getGame(url)
                 serviceDataBase.addGameInDatabase(game.name, game)
-                val intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra("game", game)
-                startActivity(intent)
+//                val intent = Intent(this, HomeActivity::class.java)
+//                intent.putExtra("game", game)
+                startActivity(Intent(this, HomeActivity::class.java))
             }
         }
     }
@@ -82,13 +82,13 @@ class CadastroGameActivity : AppCompatActivity() {
             if (requestCode == 1) {
                 val imagemSelecionada: Uri? = data?.data
                 serviceStorage.uploadPhotoGame(imagemSelecionada)
-                addImageInButton(imagemSelecionada)
+                this.addImageInButton(imagemSelecionada)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun addImageInButton(uri: Uri?) {
+    private fun addImageInButton(uri: Uri?) {
         Glide.with(this)
             .load(uri)
             .into(bind.ivImgCamera)
@@ -96,17 +96,4 @@ class CadastroGameActivity : AppCompatActivity() {
         bind.ivImgCamera.visibility = ImageView.VISIBLE
         bind.ivIcCamera.visibility = ImageView.GONE
     }
-
-//    run {
-//        MaterialAlertDialogBuilder(this)
-//            .setBackgroundInsetStart(70)
-//            .setBackgroundInsetEnd(70)
-//            .setBackgroundInsetTop(10)
-//            .setBackgroundInsetBottom(100)
-//            .setBackground(
-//                ContextCompat.getColor(this, android.R.color.transparent).toDrawable()
-//            )
-//            .setView(view)
-//            .show()
-//    }
 }
