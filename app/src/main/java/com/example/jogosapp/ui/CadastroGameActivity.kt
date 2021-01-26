@@ -39,6 +39,15 @@ class CadastroGameActivity : AppCompatActivity() {
         serviceDataBase = ServiceFirebaseDatabase(reference)
         serviceStorage = ServiceFirebaseStorage(firebaseStorage)
 
+        val obj = intent.getSerializableExtra("game")
+        if (obj != null){
+            val game = obj as Game
+            addImageInButton(game.urlImage)
+            bind.etNomeGame.setText(game.name)
+            bind.etYearGame.setText(game.year)
+            bind.etDescriptionGame.setText(game.description)
+        }
+
         bind.buttonAddImage.setOnClickListener {
             dispatchTakePictureIntent()
         }
@@ -49,8 +58,6 @@ class CadastroGameActivity : AppCompatActivity() {
                 Log.i("TAG", getGame(url).toString())
                 val game = getGame(url)
                 serviceDataBase.addGameInDatabase(game.name, game)
-//                val intent = Intent(this, HomeActivity::class.java)
-//                intent.putExtra("game", game)
                 startActivity(Intent(this, HomeActivity::class.java))
             }
         }
@@ -91,6 +98,15 @@ class CadastroGameActivity : AppCompatActivity() {
     private fun addImageInButton(uri: Uri?) {
         Glide.with(this)
             .load(uri)
+            .into(bind.ivImgCamera)
+
+        bind.ivImgCamera.visibility = ImageView.VISIBLE
+        bind.ivIcCamera.visibility = ImageView.GONE
+    }
+
+    private fun addImageInButton(url: String) {
+        Glide.with(this)
+            .load(url)
             .into(bind.ivImgCamera)
 
         bind.ivImgCamera.visibility = ImageView.VISIBLE

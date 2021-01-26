@@ -21,7 +21,7 @@ class GameAdapter (val listener: OnClickGame, val context: HomeActivity): Recycl
     override fun getItemCount(): Int = listGame.size
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        var Game = listGame[position]
+        val Game = listGame[position]
         holder.name.text = Game.name
         holder.year.text = Game.year
 
@@ -30,7 +30,7 @@ class GameAdapter (val listener: OnClickGame, val context: HomeActivity): Recycl
             .into(holder.imagem)
     }
 
-    fun addGame(vararg games: Game){
+    fun addGames(games: List<Game>){
         listGame.addAll(games)
         notifyDataSetChanged()
     }
