@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.jogosapp.databinding.ActivityHomeBinding
+import com.example.jogosapp.domain.Game
 import com.example.jogosapp.domain.GameAdapter
 import com.example.jogosapp.service.ServiceFirebaseDatabase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.util.HashSet
 
 class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
     private lateinit var bind: ActivityHomeBinding
@@ -21,6 +23,7 @@ class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
     private lateinit var gridLayoutManager: GridLayoutManager
     private var firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var reference: DatabaseReference = firebaseDatabase.getReference("games")
+    private val listSetGames = HashSet<Game>()
 
     private val viewModel by viewModels<HomeViewModel>{
         object : ViewModelProvider.Factory {
@@ -47,7 +50,10 @@ class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
 
 
         viewModel.listGames.observe(this) {
-            gameAdapter.addGames(it)
+            val setList = hashSetOf<Game>()
+            setList.addAll(it)
+            gameAdapter.addGames(setList.toList())
+            Log.i("----------------", setList.toString())
         }
 
         bind.floatingButtonGame.setOnClickListener { view ->

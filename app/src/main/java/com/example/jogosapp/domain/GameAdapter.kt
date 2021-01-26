@@ -31,6 +31,7 @@ class GameAdapter (val listener: OnClickGame, val context: HomeActivity): Recycl
     }
 
     fun addGames(games: List<Game>){
+        listGame.clear()
         listGame.addAll(games)
         notifyDataSetChanged()
     }
