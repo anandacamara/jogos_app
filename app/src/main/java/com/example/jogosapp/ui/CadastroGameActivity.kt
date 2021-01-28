@@ -12,32 +12,25 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.jogosapp.databinding.ActivityCadastroGameBinding
 import com.example.jogosapp.domain.Game
-import com.example.jogosapp.service.ServiceFirebaseDatabase
-import com.example.jogosapp.service.ServiceFirebaseStorage
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
+import com.example.jogosapp.service.*
 
 
 class CadastroGameActivity : AppCompatActivity() {
     private lateinit var bind: ActivityCadastroGameBinding
-    private lateinit var firebaseDatabase: FirebaseDatabase
-    private lateinit var reference: DatabaseReference
-    private lateinit var firebaseStorage: FirebaseStorage
-    private lateinit var serviceDataBase: ServiceFirebaseDatabase
-    private lateinit var serviceStorage: ServiceFirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityCadastroGameBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
-        firebaseDatabase = FirebaseDatabase.getInstance()
-        firebaseStorage = FirebaseStorage.getInstance()
-        reference = firebaseDatabase.getReference("games")
-
-        serviceDataBase = ServiceFirebaseDatabase(reference)
-        serviceStorage = ServiceFirebaseStorage(firebaseStorage)
+        val obj = intent.getSerializableExtra("game")
+        if (obj != null){
+            val game = obj as Game
+            addImageInButton(game.urlImage)
+            bind.etNomeGame.setText(game.name)
+            bind.etYearGame.setText(game.year)
+            bind.etDescriptionGame.setText(game.description)
+        }
 
         bind.buttonAddImage.setOnClickListener {
             dispatchTakePictureIntent()
@@ -48,9 +41,7 @@ class CadastroGameActivity : AppCompatActivity() {
             if (url.isNotEmpty()) {
                 Log.i("TAG", getGame(url).toString())
                 val game = getGame(url)
-                serviceDataBase.addGameInDatabase(game.name, game)
-//                val intent = Intent(this, HomeActivity::class.java)
-//                intent.putExtra("game", game)
+                serviceDB.addGameInDatabase(game.name, game)
                 startActivity(Intent(this, HomeActivity::class.java))
             }
         }
@@ -91,6 +82,15 @@ class CadastroGameActivity : AppCompatActivity() {
     private fun addImageInButton(uri: Uri?) {
         Glide.with(this)
             .load(uri)
+            .into(bind.ivImgCamera)
+
+        bind.ivImgCamera.visibility = ImageView.VISIBLE
+        bind.ivIcCamera.visibility = ImageView.GONE
+    }
+
+    private fun addImageInButton(url: String) {
+        Glide.with(this)
+            .load(url)
             .into(bind.ivImgCamera)
 
         bind.ivImgCamera.visibility = ImageView.VISIBLE
