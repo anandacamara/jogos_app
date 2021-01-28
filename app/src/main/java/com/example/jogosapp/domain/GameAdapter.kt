@@ -11,7 +11,7 @@ import com.example.jogosapp.R
 import com.example.jogosapp.ui.HomeActivity
 
 class GameAdapter (val listener: OnClickGame, val context: HomeActivity): RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
-    val listGame = ArrayList<Game>()
+    var listGame = ArrayList<Game>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)

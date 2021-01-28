@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
@@ -12,23 +13,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.jogosapp.databinding.ActivityHomeBinding
 import com.example.jogosapp.domain.Game
 import com.example.jogosapp.domain.GameAdapter
-import com.example.jogosapp.service.ServiceFirebaseDatabase
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import java.util.HashSet
+import com.example.jogosapp.service.databaseReference
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
     private lateinit var bind: ActivityHomeBinding
     private lateinit var gameAdapter: GameAdapter
     private lateinit var gridLayoutManager: GridLayoutManager
-    private var firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private var reference: DatabaseReference = firebaseDatabase.getReference("games")
-    private val listSetGames = HashSet<Game>()
+    private var listAllGames = ArrayList<Game>()
 
-    private val viewModel by viewModels<HomeViewModel>{
+    private val viewModel by viewModels<HomeViewModel> {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return HomeViewModel(reference) as T
+                return HomeViewModel(databaseReference) as T
             }
         }
     }
@@ -40,8 +38,6 @@ class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
 
         viewModel.popListOfGames()
 
-        firebaseDatabase = FirebaseDatabase.getInstance()
-
         gameAdapter = GameAdapter(this, this)
         gridLayoutManager = GridLayoutManager(this, 2)
         bind.recyclerViewHome.layoutManager = gridLayoutManager
@@ -50,22 +46,59 @@ class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
 
 
         viewModel.listGames.observe(this) {
-            val setList = hashSetOf<Game>()
-            setList.addAll(it)
-            gameAdapter.addGames(setList.toList())
-            Log.i("----------------", setList.toString())
+            gameAdapter.addGames(it)
+            val list = arrayListOf<Game>()
+            list.addAll(it)
+            listAllGames = list
         }
 
-        bind.floatingButtonGame.setOnClickListener { view ->
+        bind.floatingButtonGame.setOnClickListener {
             startActivity(Intent(this, CadastroGameActivity::class.java))
         }
+
+        searchAsteroid()
     }
 
     override fun onClickGame(position: Int) {
         val game = gameAdapter.listGame[position]
         val intent = Intent(this, DescricaoActivity::class.java)
-                intent.putExtra("game", game)
+        intent.putExtra("game", game)
 
         startActivity(intent)
+    }
+
+    private fun searchAsteroid() {
+        val searchView = bind.searchview
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText!!.isNotEmpty()) {
+                    gameAdapter.listGame.clear()
+                    Log.i("newtext", newText)
+                    Log.i("list", this@HomeActivity.listAllGames.toString())
+
+                    val list = ArrayList<Game>()
+                    this@HomeActivity.listAllGames.forEach {
+                        if (it.name.toLowerCase(Locale.getDefault()).contains(
+                                newText.toLowerCase(
+                                    Locale.getDefault()
+                                )
+                            )
+                        ) list.add(it)
+                    }
+                    gameAdapter.listGame = list
+                    gameAdapter.notifyDataSetChanged()
+                } else {
+                    gameAdapter.listGame.clear()
+                    gameAdapter.listGame = this@HomeActivity.listAllGames
+                    gameAdapter.notifyDataSetChanged()
+                }
+                return true
+            }
+        })
     }
 }
