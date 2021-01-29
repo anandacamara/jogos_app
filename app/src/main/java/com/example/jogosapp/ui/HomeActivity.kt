@@ -67,7 +67,7 @@ class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
         startActivity(intent)
     }
 
-    private fun searchAsteroid() {
+    private fun searchGame() {
         val searchView = bind.searchview
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
