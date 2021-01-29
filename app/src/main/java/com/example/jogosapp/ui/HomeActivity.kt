@@ -56,7 +56,7 @@ class HomeActivity : AppCompatActivity(), GameAdapter.OnClickGame {
             startActivity(Intent(this, CadastroGameActivity::class.java))
         }
 
-        searchAsteroid()
+        searchGame()
     }
 
     override fun onClickGame(position: Int) {
